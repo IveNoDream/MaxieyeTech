@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/disable_bt"/>
-    <Button
+    <!--<Button
         android:id="@+id/btn_start_discovery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,6 +24,15 @@
         android:id="@+id/btn_stop_discovery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/stop_discovery_bt"/>
+        android:text="@string/stop_discovery_bt"/>-->
+    <Button
+        android:id="@+id/btn_search_devices"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/start_search_devices"/>
+    <ListView
+        android:id="@+id/lv_device_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></ListView>
 
 </LinearLayout>
