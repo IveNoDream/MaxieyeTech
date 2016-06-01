@@ -2,15 +2,19 @@ package com.maxieyetech.bt;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.maxieyetech.bt.utils.BTClient;
 import com.maxieyetech.bt.utils.BTDeviceAdapter;
 import com.maxieyetech.bt.utils.BTItem;
 import com.maxieyetech.bt.utils.BTManager;
+import com.maxieyetech.bt.utils.BTMsg;
 import com.maxieyetech.bt.utils.BTStatus;
 
 public class BTTestMainActivity extends Activity implements BTStatus,AdapterView.OnItemClickListener{
@@ -20,10 +24,13 @@ public class BTTestMainActivity extends Activity implements BTStatus,AdapterView
 	//private Button mBTDiscovery;
 	//private Button mBTCancelDiscovery;
 	private Button mBTSearchDevices;
+	private Button mSendMessage;
+	private Button mDisconnect;
 	private BTDeviceAdapter mAdapter;
 	private ListView mDeviceList;
 	private BTManager mManager = null;
 	private boolean mIsRegister = false;
+	private BTClient client;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -34,12 +41,16 @@ public class BTTestMainActivity extends Activity implements BTStatus,AdapterView
 		//mBTDiscovery = (Button)findViewById(R.id.btn_start_discovery);
 		//mBTCancelDiscovery = (Button)findViewById(R.id.btn_stop_discovery);
 		mBTSearchDevices = (Button) findViewById(R.id.btn_search_devices);
+		mSendMessage = (Button) findViewById(R.id.btn_send_msg);
+		mDisconnect = (Button) findViewById(R.id.btn_disconnect);
 
 		mBTEnable.setOnClickListener(listener);
 		mBTDisable.setOnClickListener(listener);
 		//mBTDiscovery.setOnClickListener(listener);
 		//mBTCancelDiscovery.setOnClickListener(listener);
 		mBTSearchDevices.setOnClickListener(listener);
+		mSendMessage.setOnClickListener(listener);
+		mDisconnect.setOnClickListener(listener);
 
 		mAdapter = new BTDeviceAdapter(this);
 		mDeviceList = (ListView) findViewById(R.id.lv_device_list);
@@ -48,6 +59,8 @@ public class BTTestMainActivity extends Activity implements BTStatus,AdapterView
 
 		mManager = BTManager.getInstance();
 		mManager.setBTStatusListner(this);
+
+		//client = new BTClient(BTManager.getInstance().getAdapter(),handler);
 	}
 
 	public View.OnClickListener listener = new View.OnClickListener() {
@@ -68,6 +81,14 @@ public class BTTestMainActivity extends Activity implements BTStatus,AdapterView
 					break;*/
 				case R.id.btn_search_devices:
 					mManager.startDiscoveringDevice();
+					break;
+				case R.id.btn_send_msg:
+					//BTClient client = new BTClient(BTManager.getInstance().getAdapter(),handler);
+					//client.connectBTServer(BTMsg.BlueToothAddress);
+					client.sendmsg("11");
+					break;
+				case R.id.btn_disconnect:
+					client.closeBTClient();
 					break;
 				default:
 
@@ -117,6 +138,30 @@ public class BTTestMainActivity extends Activity implements BTStatus,AdapterView
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+		BTItem item = (BTItem) mAdapter.getItem(position);
+		Log.i("mijie","device name: " + item.getBTAddress() + " name: " + item.getBTName() + " type: " + item.getBTType());
+		BTMsg.BlueToothAddress = item.getBTAddress();
+		if (BTMsg.LastblueToothAddress != BTMsg.BlueToothAddress){
+			BTMsg.LastblueToothAddress = BTMsg.BlueToothAddress;
+		}
+		client = new BTClient(BTManager.getInstance().getAdapter(),handler);
+		client.connectBTServer(BTMsg.BlueToothAddress);
 	}
+
+	private Handler handler = new Handler(){
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			switch (msg.what){
+				case 0:
+					Log.i("mijie","msg: " + msg.obj.toString());
+					break;
+				case 1:
+					Log.i("mijie","receive msg: " + msg.obj.toString());
+					break;
+				default:
+					break;
+			}
+		}
+	};
 }
