@@ -8,8 +8,10 @@
     <string name="disable_bt">disable bt</string>
     <string name="start_discovery_bt">start discovery bt</string>
     <string name="stop_discovery_bt">stop discovery bt</string>
-    <string name="start_search_devices">search devices</string>
-    <string name="send_message">send message</string>
+    <string name="start_search_devices">search</string>
+    <string name="send_message">send</string>
     <string name="disconnect">disconnect</string>
+    <string name="receive">receive:</string>
+    <string name="clear">clear</string>
 
 </resources>

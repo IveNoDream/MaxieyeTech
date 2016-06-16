@@ -5,16 +5,29 @@
     android:orientation="vertical"
     tools:context="com.maxieyetech.bt.BTTestMainActivity" >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
     <Button
         android:id="@+id/btn_enable"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:text="@string/enable_bt"/>
     <Button
         android:id="@+id/btn_disable"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:text="@string/disable_bt"/>
+        <Button
+            android:id="@+id/btn_search_devices"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/start_search_devices"/>
+    </LinearLayout>
     <!--<Button
         android:id="@+id/btn_start_discovery"
         android:layout_width="wrap_content"
@@ -25,21 +38,45 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/stop_discovery_bt"/>-->
-    <Button
-        android:id="@+id/btn_search_devices"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/start_search_devices"/>
+        android:orientation="horizontal">
     <Button
         android:id="@+id/btn_disconnect"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:text="@string/disconnect"/>
     <Button
         android:id="@+id/btn_send_msg"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:text="@string/send_message"/>
+        <Button
+            android:id="@+id/btn_clear"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/clear"/>
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/receive"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+        <TextView
+            android:id="@+id/tv_receive"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </ScrollView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@android:color/background_dark"/>
     <ListView
         android:id="@+id/lv_device_list"
         android:layout_width="match_parent"

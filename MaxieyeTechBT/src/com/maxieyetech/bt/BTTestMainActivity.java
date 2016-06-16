@@ -1,6 +1,8 @@
 package com.maxieyetech.bt;
 
 import android.app.Activity;
+import android.content.Context;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,6 +11,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.maxieyetech.bt.utils.BTClient;
 import com.maxieyetech.bt.utils.BTDeviceAdapter;
@@ -31,6 +35,8 @@ public class BTTestMainActivity extends Activity implements BTStatus,AdapterView
 	private BTManager mManager = null;
 	private boolean mIsRegister = false;
 	private BTClient client;
+	private TextView mTvReveive;
+	private Button mBtnClear;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,6 +49,8 @@ public class BTTestMainActivity extends Activity implements BTStatus,AdapterView
 		mBTSearchDevices = (Button) findViewById(R.id.btn_search_devices);
 		mSendMessage = (Button) findViewById(R.id.btn_send_msg);
 		mDisconnect = (Button) findViewById(R.id.btn_disconnect);
+		mTvReveive = (TextView) findViewById(R.id.tv_receive);
+		mBtnClear = (Button) findViewById(R.id.btn_clear);
 
 		mBTEnable.setOnClickListener(listener);
 		mBTDisable.setOnClickListener(listener);
@@ -51,6 +59,7 @@ public class BTTestMainActivity extends Activity implements BTStatus,AdapterView
 		mBTSearchDevices.setOnClickListener(listener);
 		mSendMessage.setOnClickListener(listener);
 		mDisconnect.setOnClickListener(listener);
+		mBtnClear.setOnClickListener(listener);
 
 		mAdapter = new BTDeviceAdapter(this);
 		mDeviceList = (ListView) findViewById(R.id.lv_device_list);
@@ -60,7 +69,20 @@ public class BTTestMainActivity extends Activity implements BTStatus,AdapterView
 		mManager = BTManager.getInstance();
 		mManager.setBTStatusListner(this);
 
+		Log.i("mijie", "gps enable: " + isGpsEnable(BTTestMainActivity.this));
+
 		//client = new BTClient(BTManager.getInstance().getAdapter(),handler);
+	}
+
+	public static final boolean isGpsEnable(final Context context) {
+		LocationManager locationManager
+				= (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+		boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+		boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+		if (gps || network) {
+			return true;
+		}
+		return false;
 	}
 
 	public View.OnClickListener listener = new View.OnClickListener() {
@@ -85,10 +107,13 @@ public class BTTestMainActivity extends Activity implements BTStatus,AdapterView
 				case R.id.btn_send_msg:
 					//BTClient client = new BTClient(BTManager.getInstance().getAdapter(),handler);
 					//client.connectBTServer(BTMsg.BlueToothAddress);
-					client.sendmsg("11");
+					client.sendmsg("M6123456678");
 					break;
 				case R.id.btn_disconnect:
 					client.closeBTClient();
+					break;
+				case R.id.btn_clear:
+					mTvReveive.setText("");
 					break;
 				default:
 
@@ -154,10 +179,12 @@ public class BTTestMainActivity extends Activity implements BTStatus,AdapterView
 			super.handleMessage(msg);
 			switch (msg.what){
 				case 0:
-					Log.i("mijie","msg: " + msg.obj.toString());
+					Toast.makeText(BTTestMainActivity.this,msg.getData().getString("msg"),Toast.LENGTH_LONG).show();
+					Log.i("mijie","msg: " + msg.getData().getString("msg"));
 					break;
 				case 1:
-					Log.i("mijie","receive msg: " + msg.obj.toString());
+					mTvReveive.append(msg.getData().getString("msg") + "\n");
+					Log.i("mijie","receive msg: " + msg.getData().getString("msg"));
 					break;
 				default:
 					break;
